@@ -3,10 +3,10 @@ import Link from 'next/link';
 
 export default function Header() {
   return (
-    <header className="bg-background border-b px-4 lg:px-6 h-14 flex items-center">
+    <header className="bg-background border-b px-4 lg:px-6 h-14 flex items-center font-sans">
     <Link href="/" className="flex items-center justify-center" prefetch={false}>
       <MountainIcon className="h-6 w-6" />
-      <span className="text-xl sm:text-2xl">EventMax KZ</span>
+      <span className="text-xl sm:text-2xl font-bold">EventMax KZ</span>
     </Link>
     <nav className="ml-auto flex gap-4 sm:gap-6">
       <Link href="/make-event" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
