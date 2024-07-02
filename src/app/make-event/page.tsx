@@ -28,7 +28,7 @@ export default function Component() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-6">
+    <div className="w-full max-w-2xl mx-auto space-y-6 items-center px-5">
       <Toolkit />
       <div className="grid gap-4">
         <div className="space-y-1 py-5">
@@ -65,7 +65,7 @@ export default function Component() {
             <input
               id="date"
               type="text"
-              placeholder="12:00-14:00, 12 Июня 2024"
+              placeholder="12:00, 12 Июня"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10"
@@ -78,7 +78,7 @@ export default function Component() {
             <input
               id="location"
               type="text"
-              placeholder="Город, улица, здание, офис..."
+              placeholder="Город, улица, офис..."
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10"
