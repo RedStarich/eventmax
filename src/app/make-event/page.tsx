@@ -1,8 +1,10 @@
-"use client"
+// pages/index.tsx (или ваш основной файл компонента)
+"use client";
 
 import { useState } from "react";
 import Toolkit from "../components/Toolkit";
 import { generatePost } from "../config/gemini";
+import { supabase } from "../config/supabase";
 
 export default function Component() {
   const [title, setTitle] = useState("");
@@ -10,6 +12,7 @@ export default function Component() {
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
   const [outputText, setOutputText] = useState("");
+  const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,6 +25,53 @@ export default function Component() {
       setOutputText(result);
     } catch (err) {
       setError("Ошибка при генерации поста.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setImage(event.target.files[0]);
+    }
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      let imageUrl = null;
+
+      if (image) {
+        const { data: imageData, error: imageError } = await supabase
+          .storage
+          .from('event-images')
+          .upload(`public/${image.name}`, image);
+
+        if (imageError) {
+          throw imageError;
+        }
+
+        imageUrl = imageData.path;
+      }
+
+      const { data, error } = await supabase
+        .from('events')
+        .insert([{ title, content, date, location, outputText, image_url: imageUrl }]);
+
+      if (error) {
+        throw error;
+      }
+
+      setTitle("");
+      setContent("");
+      setDate("");
+      setLocation("");
+      setOutputText("");
+      setImage(null);
+    } catch (err) {
+      setError("Ошибка при сохранении мероприятия.");
     } finally {
       setLoading(false);
     }
@@ -85,12 +135,30 @@ export default function Component() {
             />
           </div>
         </div>
+        <div className="space-y-1 py-5">
+          <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+            Загрузить изображение (опционально)
+          </label>
+          <input
+            id="image"
+            type="file"
+            onChange={handleImageUpload}
+            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+          />
+        </div>
         <button
           type="button"
           onClick={handleGenerate}
           className="items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          {loading ? 'Генерация...' : 'Опубликовать'}
+          {loading ? 'Генерация...' : 'Генерировать пост'}
+        </button>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+        >
+          {loading ? 'Сохранение...' : 'Подтвердить и сохранить'}
         </button>
         {error && <p className="text-red-500">{error}</p>}
         {outputText && (
