@@ -1,10 +1,13 @@
-// pages/index.tsx (или ваш основной файл компонента)
 "use client";
 
-import { useState } from "react";
+import React, { useState, FormEvent, ChangeEvent } from 'react';
 import Toolkit from "../components/Toolkit";
 import { generatePost } from "../config/gemini";
-import { supabase } from "../config/supabase";
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
+const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL || 'your-supabase-url';
+const supabaseKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'your-anon-key';
+const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
 
 export default function Component() {
   const [title, setTitle] = useState("");
@@ -15,6 +18,7 @@ export default function Component() {
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<string>('');
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -36,29 +40,16 @@ export default function Component() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setLoading(true);
     setError(null);
-
+    
     try {
-      let imageUrl = null;
-
-      if (image) {
-        const { data: imageData, error: imageError } = await supabase
-          .storage
-          .from('event-images')
-          .upload(`public/${image.name}`, image);
-
-        if (imageError) {
-          throw imageError;
-        }
-
-        imageUrl = imageData.path;
-      }
-
+      let image_url = null;
       const { data, error } = await supabase
         .from('events')
-        .insert([{ title, content, date, location, outputText, image_url: imageUrl }]);
+        .insert([{ title, content, date, location, outputText, image_url}]);
 
       if (error) {
         throw error;
@@ -70,8 +61,10 @@ export default function Component() {
       setLocation("");
       setOutputText("");
       setImage(null);
-    } catch (err) {
-      setError("Ошибка при сохранении мероприятия.");
+      setStatus('Текст успешно отправлен!');
+    } catch (err : any) {
+      console.error('Ошибка при отправке текста:', err.message);
+      setStatus(`Ошибка при отправке текста: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -80,7 +73,7 @@ export default function Component() {
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6 items-center px-5">
       <Toolkit />
-      <div className="grid gap-4">
+      <form onSubmit={handleSubmit} className="grid gap-4">
         <div className="space-y-1 py-5">
           <label htmlFor="title" className="block text-sm font-medium text-gray-700">
             Имя события
@@ -154,20 +147,20 @@ export default function Component() {
           {loading ? 'Генерация...' : 'Генерировать пост'}
         </button>
         <button
-          type="button"
-          onClick={handleSubmit}
+          type="submit"
           className="items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
           {loading ? 'Сохранение...' : 'Подтвердить и сохранить'}
         </button>
         {error && <p className="text-red-500">{error}</p>}
+        {status && <p>{status}</p>}
         {outputText && (
           <div className="mt-4 p-4 border border-gray-300 rounded-md bg-gray-50">
             <h2 className="text-lg font-medium text-gray-700">Сгенерированный пост</h2>
             <div className="whitespace-pre-line text-gray-800">{outputText}</div>
           </div>
         )}
-      </div>
+      </form>
     </div>
   );
 }
