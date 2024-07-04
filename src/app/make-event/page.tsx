@@ -38,7 +38,7 @@ export default function Component() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
+          chat_id: chatId,
           text: outputText,
         }),
       });
