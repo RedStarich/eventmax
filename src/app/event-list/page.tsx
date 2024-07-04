@@ -1,58 +1,23 @@
-// pages/test-supabase.tsx
 'use client';
-import { useEffect, useState } from 'react';
-import { supabase } from '../config/supabase';
+import EventList from '../components/EventList';
 
-interface Event {
-  id: number;
-  title: string;
-  content: string;
-  date: string;
-  location: string;
-}
-
-const TestSupabase = () => {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const { data, error } = await supabase.from('events').select('*');
-      if (error) {
-        setError('Ошибка при загрузке мероприятий.');
-      } else {
-        setEvents(data as Event[]);
-      }
-      setLoading(false);
-    };
-
-    fetchEvents();
-  }, []);
-
-  if (loading) {
-    return <div>Загрузка...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
+const Home: React.FC = () => {
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-6 items-center px-5">
-      <h1 className="text-2xl font-bold">Список мероприятий</h1>
-      <div className="grid gap-4">
-        {events.map(event => (
-          <div key={event.id} className="p-4 border border-gray-300 rounded-md bg-gray-50">
-            <h2 className="text-lg font-medium text-gray-700">{event.title}</h2>
-            <p className="text-gray-800 whitespace-pre-line">{event.content}</p>
-            <p className="text-gray-600">Дата и время: {event.date}</p>
-            <p className="text-gray-600">Место проведения: {event.location}</p>
+    <main className='flex-1 py-8'>
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col items-center justify-between mb-8 sm:flex-row">
+          <h1 className="text-3xl font-bold tracking-tight">Грядущие события</h1>
+          <div className="mt-4 sm:mt-0">
+            <input
+              placeholder="Поиск событий..."
+              className="w-full max-w-md border border-neutral-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+            />
           </div>
-        ))}
+        </div>
+        <EventList />
       </div>
-    </div>
+    </main>
   );
 };
 
-export default TestSupabase;
+export default Home;

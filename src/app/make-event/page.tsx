@@ -9,6 +9,11 @@ const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL || 'your-supaba
 const supabaseKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'your-anon-key';
 const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
 
+const TELEGRAM_BOT_TOKEN = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN || 'your-telegram-bot-token';
+// const telegramChatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID || 'your-telegram-chat-id';
+const TELEGRAM_CHAT_ID = "-4129462967";
+
+
 export default function Component() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -19,6 +24,35 @@ export default function Component() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string>('');
+  const [message, setMessage] = useState('');
+  const [response, setResponse] = useState('');
+
+  const sendMessage = async () => {
+    const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+    try {
+      const response = await fetch(telegramApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: outputText,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.ok) {
+        setResponse('Message sent successfully!');
+      } else {
+        setResponse('Failed to send message.');
+      }
+    } catch (error) {
+      setResponse('Error occurred while sending message.');
+    }
+  };
+
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -40,16 +74,17 @@ export default function Component() {
     }
   };
 
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
     setError(null);
-    
+
     try {
       let image_url = null;
       const { data, error } = await supabase
         .from('events')
-        .insert([{ title, content, date, location, outputText, image_url}]);
+        .insert([{ title, content, date, location, outputText, image_url }]);
 
       if (error) {
         throw error;
@@ -62,7 +97,10 @@ export default function Component() {
       setOutputText("");
       setImage(null);
       setStatus('Текст успешно отправлен!');
-    } catch (err : any) {
+
+      // Send the outputText to Telegram
+      await sendMessage(outputText);
+    } catch (err: any) {
       console.error('Ошибка при отправке текста:', err.message);
       setStatus(`Ошибка при отправке текста: ${err.message}`);
     } finally {
