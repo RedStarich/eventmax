@@ -7,13 +7,13 @@ export default function Toolkit() {
             <div className="container mx-auto flex items-center justify-between">
                 <nav className="flex items-center gap-10">
                     <Link href="/make-event" className="hover:underline" prefetch={false}>
-                        Создать текст
+                        Создать пост события
                     </Link>
                     <Link href="/make-image" className="hover:underline" prefetch={false}>
                         Создать изображение
                     </Link>
                     <Link href="/make-bot" className="hover:underline" prefetch={false}>
-                        Создать бота
+                        Создать пост-контент
                     </Link>
                 </nav>
             </div>

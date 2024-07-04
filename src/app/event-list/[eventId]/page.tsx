@@ -22,7 +22,7 @@ interface EventPageProps {
 
 async function fetchEvent(eventId: string): Promise<Event | null> {
   const { data, error } = await supabase
-    .from<Event>('events')
+    .from('events')
     .select('*')
     .eq('id', eventId)
     .single();

@@ -15,6 +15,7 @@ const TELEGRAM_CHAT_ID = "-4129462967";
 
 
 export default function Component() {
+  const [chatId, setChatId] = useState("-4129462967");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [date, setDate] = useState("");
@@ -27,7 +28,7 @@ export default function Component() {
   const [message, setMessage] = useState('');
   const [response, setResponse] = useState('');
 
-  const sendMessage = async () => {
+  const sendMessage = async (outputText: string, chatId: string) => {
     const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
     try {
@@ -99,7 +100,7 @@ export default function Component() {
       setStatus('Текст успешно отправлен!');
 
       // Send the outputText to Telegram
-      await sendMessage(outputText);
+      await sendMessage(outputText, chatId);
     } catch (err: any) {
       console.error('Ошибка при отправке текста:', err.message);
       setStatus(`Ошибка при отправке текста: ${err.message}`);
@@ -138,34 +139,6 @@ export default function Component() {
             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <label htmlFor="date" className="block text-sm font-medium text-gray-700">
-              Дата и время
-            </label>
-            <input
-              id="date"
-              type="text"
-              placeholder="12:00, 12 Июня"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10"
-            />
-          </div>
-          <div className="space-y-1">
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700">
-              Место проведения
-            </label>
-            <input
-              id="location"
-              type="text"
-              placeholder="Город, улица, офис..."
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10"
-            />
-          </div>
-        </div>
         <div className="space-y-1 py-5">
           <label htmlFor="image" className="block text-sm font-medium text-gray-700">
             Загрузить изображение (опционально)
@@ -184,12 +157,6 @@ export default function Component() {
         >
           {loading ? 'Генерация...' : 'Генерировать пост'}
         </button>
-        <button
-          type="submit"
-          className="items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-        >
-          {loading ? 'Сохранение...' : 'Подтвердить и сохранить'}
-        </button>
         {error && <p className="text-red-500">{error}</p>}
         {status && <p>{status}</p>}
         {outputText && (
@@ -198,6 +165,14 @@ export default function Component() {
             <div className="whitespace-pre-line text-gray-800">{outputText}</div>
           </div>
         )}
+        <label>Вставьте Chat ID телеграмма</label>
+        <input id="chatId" value={chatId} onChange={(e)=>setChatId(e.target.value)}></input>
+        <button
+          type="submit"
+          className="items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+        >
+          {loading ? 'Сохранение...' : 'Подтвердить и отправить в чат'}
+        </button>
       </form>
     </div>
   );
