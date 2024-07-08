@@ -1,23 +1,18 @@
-// pages/register.tsx
 'use client';
-import { NextPage } from 'next';
+import React from 'react';
+import Register from '../components/Register';
 import Head from 'next/head';
-import Register from '../components/Register'; // adjust the import path as needed
 
-const RegisterPage: NextPage = () => {
+const LoginPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center ">
       <Head>
-        <title>Register</title>
+        <title>Регистрация</title>
         <meta name="description" content="Register for an account" />
       </Head>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-6 shadow rounded-lg sm:px-10">
-          <Register />
-        </div>
-      </div>
+      <Register />
     </div>
   );
 };
 
-export default RegisterPage;
+export default LoginPage;

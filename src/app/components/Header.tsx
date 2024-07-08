@@ -1,11 +1,44 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import LinkButton from './LinkButton';
-import Script from 'next/script';
+import { supabase } from '../config/supabaseClient'; // Импортируем Supabase клиент
+import { Session } from '@supabase/supabase-js';
 
-export default function Header() {
+interface User {
+  id: string;
+  email: string | undefined;
+}
+
+const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Error fetching session:', error);
+      } else {
+        setUser(data.session?.user as User || null);
+      }
+    };
+
+    fetchSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user as User || null);
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
 
   return (
     <>
@@ -28,7 +61,18 @@ export default function Header() {
           <Link href="#" passHref>
             <p className="text-sm font-medium text-gray-700 hover:text-gray-900">FAQ</p>
           </Link>
-          <LinkButton href="/login" className="bg-sky-700">Войти</LinkButton>
+          {user ? (
+            <>
+              <Link href="/profile" passHref>
+                <p className="text-sm font-medium text-gray-700 hover:text-gray-900">Мой профиль</p>
+              </Link>
+              <button onClick={handleSignOut} className="text-sm font-medium text-gray-700 hover:text-gray-900">
+                Выйти
+              </button>
+            </>
+          ) : (
+            <LinkButton href="/login" className="bg-sky-700">Войти</LinkButton>
+          )}
         </nav>
         <div className="md:hidden ml-auto">
           <button onClick={() => setIsOpen(!isOpen)} className="text-black">
@@ -48,13 +92,26 @@ export default function Header() {
             <Link href="#" passHref>
               <p className="text-sm font-medium text-gray-700 hover:text-gray-900">FAQ</p>
             </Link>
-            <LinkButton href="#" className="bg-red-500">Вход</LinkButton>
+            {user ? (
+              <>
+                <Link href="/profile" passHref>
+                  <p className="text-sm font-medium text-gray-700 hover:text-gray-900">Мой профиль</p>
+                </Link>
+                <button onClick={handleSignOut} className="text-sm font-medium text-gray-700 hover:text-gray-900">
+                  Выйти
+                </button>
+              </>
+            ) : (
+              <LinkButton href="/login" className="bg-sky-700">Войти</LinkButton>
+            )}
           </nav>
         </div>
       )}
     </>
   );
 }
+
+export default Header;
 
 function LogoIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -94,7 +151,7 @@ function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-function GraduationCapIcon(props : any) {
+function GraduationCapIcon(props: any) {
   return (
     <svg
       {...props}
