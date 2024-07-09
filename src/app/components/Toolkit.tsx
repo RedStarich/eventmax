@@ -3,20 +3,18 @@ import Link from 'next/link'
 
 export default function Toolkit() {
     return (
-        <header className="bg-primary text-primary-foreground py-4 px-6">
-            <div className="container mx-auto flex items-center justify-between">
+        <header className="bg-primary text-primary-foreground py-4">
+            <div className="container mx-auto flex justify-center">
                 <nav className="flex items-center gap-10">
                     <Link href="/make-event" className="hover:underline" prefetch={false}>
-                        Создать пост события
-                    </Link>
-                    <Link href="/make-image" className="hover:underline" prefetch={false}>
-                        Создать изображение
+                        Создать событие
                     </Link>
                     <Link href="/make-bot" className="hover:underline" prefetch={false}>
-                        Создать пост-контент
+                        Создать контент
                     </Link>
                 </nav>
             </div>
         </header>
+
     )
 }

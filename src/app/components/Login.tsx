@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { supabase } from '../config/supabaseClient'; // adjust the import path as needed
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,6 +23,7 @@ const Login: React.FC = () => {
       alert('Login successful!');
       setEmail('');
       setPassword('');
+      router.push('/profile');
     }
 
     setLoading(false);

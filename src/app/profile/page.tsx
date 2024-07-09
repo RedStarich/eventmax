@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../config/supabaseClient';
 import { useRouter } from 'next/navigation';
+import Toolkit from '../components/Toolkit';
 
 interface User {
   id: string;
@@ -51,6 +52,7 @@ const Profile: React.FC = () => {
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <p className="text-gray-700 text-base mb-4">Email: {user?.email}</p>
       </div>
+      <Toolkit />
     </div>
   );
 }

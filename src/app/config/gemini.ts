@@ -52,7 +52,35 @@ export async function generateContent(inputText: string) {
     
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
-      systemInstruction: "You are a Social Media specialist who have to create an entertaining and/or educational and overall useful post. Write post in 1000 characters in Russian.",
+      systemInstruction: "You are a Social Media specialist who have to create an entertaining and/or educational and overall useful post. Write post in 1000 characters in Russian. Use simplified Markdown syntax for formatting specifically for Telegram chats",
+    });
+    const chatSession = model.startChat({
+      generationConfig,
+      history: [
+        {
+          role: "user",
+          parts: [{ text: inputText }],
+        },
+      ],
+    });
+
+    const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
+    console.log("API Response:", result); // Строка для отладки
+    return result.response.text();
+  } catch (error) {
+    console.error("Error generating post:", error); // Строка для отладки
+    throw new Error("Ошибка при генерации поста.");
+  }
+}
+
+
+export async function generateTask(inputText: string) {
+  
+  try {
+    
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      systemInstruction: "You are an Educator and Student mentor who provides comprehensive and clear homeworks for junior students. Write post in 1000 characters in Russian. Use simplified Markdown syntax for formatting specifically for Telegram chats",
     });
     const chatSession = model.startChat({
       generationConfig,

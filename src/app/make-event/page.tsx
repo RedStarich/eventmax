@@ -3,15 +3,9 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import Toolkit from "../components/Toolkit";
 import { generatePost } from "../config/gemini";
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-
-const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL || 'your-supabase-url';
-const supabaseKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'your-anon-key';
-const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
+import { supabase } from '../config/supabaseClient';
 
 const TELEGRAM_BOT_TOKEN = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN || 'your-telegram-bot-token';
-// const telegramChatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID || 'your-telegram-chat-id';
-const TELEGRAM_CHAT_ID = "-4129462967";
 
 
 export default function Component() {
@@ -99,7 +93,6 @@ export default function Component() {
       setImage(null);
       setStatus('Текст успешно отправлен!');
 
-      // Send the outputText to Telegram
       await sendMessage(outputText, chatId);
     } catch (err: any) {
       console.error('Ошибка при отправке текста:', err.message);

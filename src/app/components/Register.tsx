@@ -2,33 +2,51 @@
 
 import { useState } from 'react';
 import { supabase } from '../config/supabaseClient'; // adjust the import path as needed
+import { useRouter } from 'next/navigation';
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [university, setUniversity] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
 
     if (error) {
-      if (error.message.includes('Email rate limit exceeded')) {
-        setError('You have attempted to register too many times. Please try again later.');
-      } else {
-        setError(error.message);
+      setError(error.message);
+      setLoading(false);
+      return;
+    }
+
+    const user = data.user;
+    
+    if (user) {
+      // Create profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert([{ id: user.id, university }]);
+
+      if (profileError) {
+        setError(profileError.message);
+        setLoading(false);
+        return;
       }
-    } else {
+
       alert('Registration successful! Check your email for the confirmation link.');
       setEmail('');
       setPassword('');
+      setUniversity('');
+      router.push('/login');
     }
 
     setLoading(false);
@@ -63,6 +81,19 @@ const Register: React.FC = () => {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="university" className="block text-sm font-medium text-gray-700">
+              Университет:
+            </label>
+            <input
+              type="text"
+              id="university"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              value={university}
+              onChange={(e) => setUniversity(e.target.value)}
               required
             />
           </div>
