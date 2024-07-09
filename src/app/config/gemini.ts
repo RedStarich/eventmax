@@ -80,7 +80,7 @@ export async function generateTask(inputText: string) {
     
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
-      systemInstruction: "You are an Educator and Student mentor who provides comprehensive and clear homeworks for junior students. Write post in 1000 characters in Russian. Use simplified Markdown syntax for formatting specifically for Telegram chats",
+      systemInstruction: "You are an Educator and Student mentor who provides comprehensive and clear homeworks for junior students. Write post in 1000 characters in Russian. Use MUST to use SIMPLIFIED MARKDOWN SYNTAX for formatting SPECIFICALLY FOR TELEGRAM chats",
     });
     const chatSession = model.startChat({
       generationConfig,
