@@ -5,7 +5,7 @@
  */
 export default function Component() {
   return (
-    <div className="flex flex-col min-h-[100dvh]">
+    <div className="font-serif flex flex-col min-h-[100dvh]">
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container m-auto px-4 md:px-6 w-[90%]">
@@ -13,18 +13,65 @@ export default function Component() {
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Создавай сообщества и находи единомышленников
+                    Управляй сообществом быстро и легко
                   </h1>
                   <p className="max-w-[600px] text-gray-500 md:text-xl">
-                    С помощью Искусственного Интеллекта, самостоятельно организовывай и веди клубы в пару кликов.
+                    Веди организацию клубов в пару кликов.
                   </p>
-                  <a
-                    href="#"
-                    className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-8 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                  >
-                    Стать главой сообщества
-                  </a>
                 </div>
+                <a
+                    href="/register"
+                    className="inline-flex h-32  items-center rounded-md  px-8 text-sm font-semibold"
+                  >
+                    <div className="w-full h-40 flex items-center justify-center cursor-pointer">
+                      <div
+                        className="relative inline-flex items-center justify-start py-3 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:text-gray-200 dark:shadow-none group"
+                      >
+                        <span
+                          className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"
+                        ></span>
+                        <span
+                          className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            fill="none"
+                            className="w-5 h-5 text-green-400"
+                          >
+                            <path
+                              d="M14 5l7 7m0 0l-7 7m7-7H3"
+                              stroke-width="2"
+                              stroke-linejoin="round"
+                              stroke-linecap="round"
+                            ></path>
+                          </svg>
+                        </span>
+                        <span
+                          className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            fill="none"
+                            className="w-5 h-5 text-green-400"
+                          >
+                            <path
+                              d="M14 5l7 7m0 0l-7 7m7-7H3"
+                              stroke-width="2"
+                              stroke-linejoin="round"
+                              stroke-linecap="round"
+                            ></path>
+                          </svg>
+                        </span>
+                        <span
+                          className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white dark:group-hover:text-gray-200"
+                        >Начать</span>
+                      </div>
+                    </div>
+                  </a>
               </div>
               <img
                 src="/images/placeholder4.png"
@@ -41,9 +88,9 @@ export default function Component() {
             <div>
               <div className="flex flex-col justify-center">
                 <div>
-                  <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Будь на волне со своими интересами!</h2>
+                  <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Будь всегда на связи со своим сообществом</h2>
                   <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    Посещай любые мероприятия в своём городе и находи новых друзей.
+                    Создавай контент для своих менти каждый день
                   </p>
                 </div>
                 <ul className="grid gap-2 py-4">
@@ -76,7 +123,7 @@ export default function Component() {
                         strokeLinejoin="round"
                       />
                     </svg>
-                    Club Movie Night - April 15th
+                    Домашние задания
                   </li>
                   <li>
                     <svg
@@ -107,7 +154,7 @@ export default function Component() {
                         strokeLinejoin="round"
                       />
                     </svg>
-                    Robotics Club Meetup - May 5th
+                    Списки полезных ресурсов
                   </li>
                   <li>
                     <svg
@@ -138,7 +185,7 @@ export default function Component() {
                         strokeLinejoin="round"
                       />
                     </svg>
-                    Sustainability Fair - June 1st
+                    Уведомления о мероприятиях
                   </li>
                 </ul>
               </div>
@@ -153,9 +200,9 @@ export default function Component() {
           </div>
         </section>
         {/* <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-          <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
+          <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10 w-[90%]">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Explore Student Clubs</h2>
+              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight"></h2>
               <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Find your community and get involved in student clubs that match your interests.
               </p>

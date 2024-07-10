@@ -3,7 +3,7 @@ import EventList from '../components/EventList';
 
 const Home: React.FC = () => {
   return (
-    <main className='flex-1 py-8'>
+    <main className='font-serif flex-1 py-8'>
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center justify-between mb-8 sm:flex-row">
           <h1 className="text-3xl font-bold tracking-tight">Грядущие события</h1>

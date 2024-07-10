@@ -3,6 +3,7 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { generateTask } from '../config/gemini';
+import Toolkit from '../components/Toolkit';
 
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL || 'your-supabase-url';
 const supabaseKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'your-anon-key';
@@ -167,6 +168,7 @@ export default function ContentSeriesGenerator() {
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6 items-center px-5">
+      <Toolkit/>
       <form onSubmit={handleGenerate} className="grid gap-4">
         <div className="space-y-1">
           <label htmlFor="prompt" className="block text-sm font-medium text-gray-700">

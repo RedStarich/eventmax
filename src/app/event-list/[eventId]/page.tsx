@@ -42,7 +42,7 @@ export default async function EventPage({ params }: { params: EventPageProps }) 
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="font-serif container mx-auto p-4">
       <div className="flex flex-col md:flex-row">
         <div className="md:w-1/2 p-4">
           <h1 className="text-4xl font-bold mb-4">{event.title}</h1>

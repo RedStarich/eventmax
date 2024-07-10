@@ -30,7 +30,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center">
+    <div className="font-serif relative min-h-screen flex items-center justify-center">
       <div className="absolute inset-0 bg-cover bg-center filter" style={{ backgroundImage: "url('/images/background-login.jpg')" }}></div>
       <div className="relative z-10 max-w-md w-full p-6 bg-white bg-opacity-90 shadow-md rounded-lg">
         <h2 className="text-2xl font-bold mb-6 text-center">Войти в аккаунт</h2>

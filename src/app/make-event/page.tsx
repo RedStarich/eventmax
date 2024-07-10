@@ -107,7 +107,7 @@ export default function Component() {
       <Toolkit />
       <form onSubmit={handleSubmit} className="grid gap-4">
         <div className="space-y-1 py-5">
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+          {/* <label htmlFor="title" className="block text-sm font-medium text-gray-700">
             Имя события
           </label>
           <input
@@ -117,10 +117,22 @@ export default function Component() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          />
+          /> */}
+          <div className="w-full  p-5 bg-white rounded-lg font-mono">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Имя события</label>
+            <input
+              className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
+              placeholder="Название мероприятия"
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+
         </div>
         <div className="space-y-1">
-          <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+          {/* <label htmlFor="content" className="block text-sm font-medium text-gray-700">
             Содержание
           </label>
           <textarea
@@ -130,18 +142,18 @@ export default function Component() {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          />
-        </div>
-        <div className="space-y-1 py-5">
-          <label htmlFor="image" className="block text-sm font-medium text-gray-700">
-            Загрузить изображение (опционально)
-          </label>
-          <input
-            id="image"
-            type="file"
-            onChange={handleImageUpload}
-            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-          />
+          /> */}
+          <div className="w-full p-5 bg-white rounded-lg font-mono">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Имя события</label>
+            <textarea
+              className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
+              placeholder="Название мероприятия"
+              id="title"
+              rows={8}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+          </div>
         </div>
         <button
           type="button"
@@ -159,7 +171,7 @@ export default function Component() {
           </div>
         )}
         <label>Вставьте Chat ID телеграмма</label>
-        <input id="chatId" value={chatId} onChange={(e)=>setChatId(e.target.value)}></input>
+        <input id="chatId" value={chatId} onChange={(e) => setChatId(e.target.value)}></input>
         <button
           type="submit"
           className="items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
