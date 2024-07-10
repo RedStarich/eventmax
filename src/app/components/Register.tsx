@@ -1,5 +1,3 @@
-// components/Register.tsx
-
 import { useState } from 'react';
 import { supabase } from '../config/supabaseClient'; // adjust the import path as needed
 import { useRouter } from 'next/navigation';
@@ -17,39 +15,43 @@ const Register: React.FC = () => {
     setLoading(true);
     setError(null);
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
 
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-      return;
-    }
-
-    const user = data.user;
-    
-    if (user) {
-      // Create profile
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert([{ id: user.id, university }]);
-
-      if (profileError) {
-        setError(profileError.message);
+      if (error) {
+        setError(`Error during sign up: ${error.message}`);
         setLoading(false);
         return;
       }
 
-      alert('Registration successful! Check your email for the confirmation link.');
-      setEmail('');
-      setPassword('');
-      setUniversity('');
-      router.push('/login');
-    }
+      const user = data.user;
 
-    setLoading(false);
+      if (user) {
+        // Create profile
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert([{ id: user.id, university }]);
+
+        if (profileError) {
+          setError(`Error creating profile: ${profileError.message}`);
+          setLoading(false);
+          return;
+        }
+
+        alert('Registration successful! Check your email for the confirmation link.');
+        setEmail('');
+        setPassword('');
+        setUniversity('');
+        router.push('/login');
+      }
+    } catch (err) {
+      setError(`Unexpected error: ${(err as Error).message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
