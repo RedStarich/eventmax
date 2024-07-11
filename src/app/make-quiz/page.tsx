@@ -1,12 +1,12 @@
-// pages/create-quiz.tsx
-import CreateQuiz from '../components/createQuiz';
+// // pages/create-quiz.tsx
+// import CreateQuiz from '../components/CreateQuiz';
 
-const CreateQuizPage = () => {
-  return (
-    <div>
-      <CreateQuiz />
-    </div>
-  );
-};
+// const CreateQuizPage = () => {
+//   return (
+//     <div>
+//       <CreateQuiz />
+//     </div>
+//   );
+// };
 
-export default CreateQuizPage;
+// export default CreateQuizPage;
