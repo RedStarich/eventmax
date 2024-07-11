@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, FormEvent, ChangeEvent } from 'react';
+import React, { useState, FormEvent } from 'react';
 import Toolkit from "../components/Toolkit";
-import { generatePost, validateContent } from "../config/gemini";
+import { generatePost, validateContent, validateFinalContent } from "../config/gemini";
 import { supabase } from '../config/supabaseClient';
 
 const TELEGRAM_BOT_TOKEN = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN || 'your-telegram-bot-token';
@@ -14,6 +14,7 @@ export default function Component() {
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
   const [outputText, setOutputText] = useState("");
+  const [editedText, setEditedText] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,16 +68,11 @@ export default function Component() {
 
       const result = await generatePost(inputText);
       setOutputText(result);
+      setEditedText(result);
     } catch (err) {
       setError("Ошибка при генерации поста.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setImage(event.target.files[0]);
     }
   };
 
@@ -85,16 +81,16 @@ export default function Component() {
     setLoading(true);
     setError(null);
 
-    if (!outputText) {
-      setError("Пожалуйста, сгенерируйте пост перед отправкой.");
+    if (!editedText) {
+      setError("Пожалуйста, отредактируйте и подтвердите пост перед отправкой.");
       setLoading(false);
       return;
     }
 
     try {
-      const isValid = await validateContent(outputText);
+      const isValid = await validateFinalContent(editedText);
       if (!isValid) {
-        setError("Содержимое содержит запрещенные слова или фразы.");
+        setError("Содержимое содержит ошибки или placeholders.");
         setLoading(false);
         return;
       }
@@ -102,7 +98,7 @@ export default function Component() {
       let image_url = null;
       const { data, error } = await supabase
         .from('events')
-        .insert([{ title, content, date, location, outputText, image_url }]);
+        .insert([{ title, content, date, location, outputText: editedText, image_url }]);
 
       if (error) {
         throw error;
@@ -113,10 +109,11 @@ export default function Component() {
       setDate("");
       setLocation("");
       setOutputText("");
+      setEditedText("");
       setImage(null);
       setStatus('Текст успешно отправлен!');
 
-      await sendMessage(outputText, chatId);
+      await sendMessage(editedText, chatId);
     } catch (err: any) {
       console.error('Ошибка при отправке текста:', err.message);
       setStatus(`Ошибка при отправке текста: ${err.message}`);
@@ -192,7 +189,12 @@ export default function Component() {
         {outputText && (
           <div className="mt-4 p-4 border border-gray-300 rounded-md bg-gray-50">
             <h2 className="text-lg font-medium text-gray-700">Сгенерированный пост</h2>
-            <div className="whitespace-pre-line text-gray-800">{outputText}</div>
+            <textarea
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-800 bg-white"
+              rows={8}
+              value={editedText}
+              onChange={(e) => setEditedText(e.target.value)}
+            />
           </div>
         )}
         <label>Вставьте Chat ID телеграмма</label>

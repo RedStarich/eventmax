@@ -105,7 +105,7 @@ export async function validateContent(inputText: string) {
   try {
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
-      systemInstruction: "You are a Social Media specialist who have to verify if the content is appropriate for a social media post in Russian. Return 'true' if the content is appropriate, otherwise return 'false'.",
+      systemInstruction: "You are a Social Media specialist who have to verify if the content is appropriate for a social media post in Russian. Return 'true' if the content is appropriate and contains no harmful or explicit language, otherwise return 'false'.",
     });
 
     const chatSession = model.startChat({
@@ -118,7 +118,7 @@ export async function validateContent(inputText: string) {
       ],
     });
 
-    const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
+    const result = await chatSession.sendMessage("Is this content appropriate? Please respond with 'true' or 'false'.");
     console.log("API Response:", result); // Debugging line
 
     const responseText = result.response.text().toLowerCase();
@@ -126,5 +126,33 @@ export async function validateContent(inputText: string) {
   } catch (error) {
     console.error("Error validating content:", error); // Debugging line
     throw new Error("Ошибка при проверке содержимого.");
+  }
+}
+
+export async function validateFinalContent(inputText: string) {
+  try {
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      systemInstruction: "You are a Social Media specialist who have to verify if the content is free of errors like missing context, incorrect hashtags, or placeholders in square brackets. Return 'true' if the content is error-free, otherwise return 'false'.",
+    });
+
+    const chatSession = model.startChat({
+      generationConfig,
+      history: [
+        {
+          role: "user",
+          parts: [{ text: inputText }],
+        },
+      ],
+    });
+
+    const result = await chatSession.sendMessage("Is this content error-free? Please respond with 'true' or 'false'.");
+    console.log("API Response:", result); // Debugging line
+
+    const responseText = result.response.text().toLowerCase();
+    return responseText.includes("true");
+  } catch (error) {
+    console.error("Error validating final content:", error); // Debugging line
+    throw new Error("Ошибка при проверке окончательного содержимого.");
   }
 }
