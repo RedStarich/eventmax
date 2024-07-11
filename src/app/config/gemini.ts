@@ -100,3 +100,31 @@ export async function generateTask(inputText: string) {
     throw new Error("Ошибка при генерации поста.");
   }
 }
+
+export async function validateContent(inputText: string) {
+  try {
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      systemInstruction: "You are a Social Media specialist who have to verify if the content is appropriate for a social media post in Russian. Return 'true' if the content is appropriate, otherwise return 'false'.",
+    });
+
+    const chatSession = model.startChat({
+      generationConfig,
+      history: [
+        {
+          role: "user",
+          parts: [{ text: inputText }],
+        },
+      ],
+    });
+
+    const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
+    console.log("API Response:", result); // Debugging line
+
+    const responseText = result.response.text().toLowerCase();
+    return responseText.includes("true");
+  } catch (error) {
+    console.error("Error validating content:", error); // Debugging line
+    throw new Error("Ошибка при проверке содержимого.");
+  }
+}

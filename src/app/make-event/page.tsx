@@ -2,11 +2,10 @@
 
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import Toolkit from "../components/Toolkit";
-import { generatePost } from "../config/gemini";
+import { generatePost, validateContent } from "../config/gemini";
 import { supabase } from '../config/supabaseClient';
 
 const TELEGRAM_BOT_TOKEN = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN || 'your-telegram-bot-token';
-
 
 export default function Component() {
   const [chatId, setChatId] = useState("-4129462967");
@@ -19,7 +18,6 @@ export default function Component() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string>('');
-  const [message, setMessage] = useState('');
   const [response, setResponse] = useState('');
 
   const sendMessage = async (outputText: string, chatId: string) => {
@@ -48,12 +46,25 @@ export default function Component() {
     }
   };
 
-
   const handleGenerate = async () => {
-    setLoading(true);
-    setError(null);
+    if (!title || !content || !date || !location) {
+      setError("Пожалуйста, заполните все поля перед генерацией поста.");
+      return;
+    }
+
+    const inputText = `Мероприятие: ${title}\nОписание: ${content}\nДата и время: ${date}\nМесто проведения: ${location}`;
+    
     try {
-      const inputText = `Мероприятие: ${title}\nОписание: ${content}\nДата и время: ${date}\nМесто проведения: ${location}`;
+      setLoading(true);
+      setError(null);
+      
+      const isValid = await validateContent(inputText);
+      if (!isValid) {
+        setError("Содержимое содержит запрещенные слова или фразы.");
+        setLoading(false);
+        return;
+      }
+
       const result = await generatePost(inputText);
       setOutputText(result);
     } catch (err) {
@@ -69,13 +80,25 @@ export default function Component() {
     }
   };
 
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
     setError(null);
 
+    if (!outputText) {
+      setError("Пожалуйста, сгенерируйте пост перед отправкой.");
+      setLoading(false);
+      return;
+    }
+
     try {
+      const isValid = await validateContent(outputText);
+      if (!isValid) {
+        setError("Содержимое содержит запрещенные слова или фразы.");
+        setLoading(false);
+        return;
+      }
+
       let image_url = null;
       const { data, error } = await supabase
         .from('events')
@@ -107,18 +130,7 @@ export default function Component() {
       <Toolkit />
       <form onSubmit={handleSubmit} className="grid gap-4">
         <div className="space-y-1 py-5">
-          {/* <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-            Имя события
-          </label>
-          <input
-            id="title"
-            type="text"
-            placeholder="Введите заголовок"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          /> */}
-          <div className="w-full  p-5 bg-white rounded-lg font-mono">
+          <div className="w-full p-5 bg-white rounded-lg font-mono">
             <label className="block text-gray-700 text-sm font-bold mb-2">Имя события</label>
             <input
               className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
@@ -129,29 +141,42 @@ export default function Component() {
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
-
         </div>
         <div className="space-y-1">
-          {/* <label htmlFor="content" className="block text-sm font-medium text-gray-700">
-            Содержание
-          </label>
-          <textarea
-            id="content"
-            placeholder="Введите подробное описание вашего мероприятия"
-            rows={8}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          /> */}
           <div className="w-full p-5 bg-white rounded-lg font-mono">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Имя события</label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Содержание</label>
             <textarea
               className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
-              placeholder="Название мероприятия"
-              id="title"
+              placeholder="Описание мероприятия"
+              id="content"
               rows={8}
               value={content}
               onChange={(e) => setContent(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="space-y-1">
+          <div className="w-full p-5 bg-white rounded-lg font-mono">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Дата и время</label>
+            <input
+              className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
+              type="datetime-local"
+              id="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="space-y-1">
+          <div className="w-full p-5 bg-white rounded-lg font-mono">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Место проведения</label>
+            <input
+              className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
+              placeholder="Место проведения"
+              type="text"
+              id="location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
           </div>
         </div>
