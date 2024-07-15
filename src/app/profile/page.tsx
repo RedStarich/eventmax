@@ -47,7 +47,7 @@ const Profile: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto mt-8 font-serif">
+    <div className="container mx-auto mt-8 font-mono">
       <h1 className="text-2xl font-bold mb-4">Мой профиль</h1>
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <p className="text-gray-700 text-base mb-4">Email: {user?.email}</p>

@@ -5,7 +5,7 @@ export default function Toolkit() {
     const currentPage = '/make-event';
 
     return (
-        <header className="bg-primary text-primary-foreground py-4 ">
+        <header className="bg-primary text-primary-foreground py-4 font-mono ">
             <div className="container mx-auto flex justify-center">
                 <nav className="flex items-center gap-10">
                     <div className="flex space-x-2 border-[3px] border-purple-400 rounded-xl select-none">

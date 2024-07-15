@@ -42,7 +42,7 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className="bg-white border-b px-4 lg:px-6 h-14 flex items-center justify-between font-serif">
+      <header className="bg-white border-b px-4 lg:px-6 h-14 flex items-center justify-between font-mono">
         <div className="flex items-center">
           <Link href="/" passHref>
             <p className="flex items-center">
@@ -66,12 +66,12 @@ const Header: React.FC = () => {
               <Link href="/profile" passHref>
                 <p className="text-sm font-medium text-gray-700 hover:text-gray-900">Мой профиль</p>
               </Link>
-              <button onClick={handleSignOut} className="text-sm font-medium text-gray-700 hover:text-gray-900">
+              <button onClick={handleSignOut} className="w-24 h-10 text-white  bg-gradient-to-r from-orange-500 via-pink-500 to-red-500 rounded-lg shadow-lg hover:scale-105 duration-200 hover:drop-shadow-2xl hover:shadow-[#7dd3fc] hover:cursor-pointer">
                 Выйти
               </button>
             </>
           ) : (
-            <LinkButton href="/login" className="bg-sky-700">Войти</LinkButton>
+            <LinkButton href="/login"><button className='w-24 h-10 text-white  bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg shadow-lg hover:scale-105 duration-200 hover:drop-shadow-2xl hover:shadow-[#7dd3fc] hover:cursor-pointer'>Войти</button></LinkButton>
           )}
         </nav>
         <div className="md:hidden ml-auto">
@@ -97,12 +97,13 @@ const Header: React.FC = () => {
                 <Link href="/profile" passHref>
                   <p className="text-sm font-medium text-gray-700 hover:text-gray-900">Мой профиль</p>
                 </Link>
-                <button onClick={handleSignOut} className="text-sm font-medium text-gray-700 hover:text-gray-900">
+                <button onClick={handleSignOut} className="w-24 h-10 text-white font-semibold bg-gradient-to-r from-orange-500 via-pink-500 to-red-500 rounded-lg shadow-lg hover:scale-105 duration-200 hover:drop-shadow-2xl hover:shadow-[#7dd3fc] hover:cursor-pointer">
                   Выйти
                 </button>
               </>
             ) : (
-              <LinkButton href="/login" className="bg-sky-700">Войти</LinkButton>
+              <LinkButton href="/login"><button className='w-24 h-10 text-white font-semibold bg-gradient-to-r from-lime-600 via-green-600 to-green-700 rounded-lg shadow-lg hover:scale-105 duration-200 hover:drop-shadow-2xl hover:shadow-[#7dd3fc] hover:cursor-pointer'>
+                Войти</button></LinkButton>
             )}
           </nav>
         </div>

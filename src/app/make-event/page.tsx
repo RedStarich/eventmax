@@ -180,7 +180,7 @@ export default function Component() {
         <button
           type="button"
           onClick={handleGenerate}
-          className="items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="relative px-8 py-2 rounded-md bg-white isolation-auto z-10 border-2 border-indigo-500 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-indigo-500 before:-z-10 before:aspect-square before:hover:scale-150 overflow-hidden before:hover:duration-700"
         >
           {loading ? 'Генерация...' : 'Генерировать пост'}
         </button>
@@ -191,7 +191,7 @@ export default function Component() {
             <h2 className="text-lg font-medium text-gray-700">Сгенерированный пост</h2>
             <textarea
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-800 bg-white"
-              rows={8}
+              rows={16}
               value={editedText}
               onChange={(e) => setEditedText(e.target.value)}
             />
@@ -201,7 +201,7 @@ export default function Component() {
         <input id="chatId" value={chatId} onChange={(e) => setChatId(e.target.value)}></input>
         <button
           type="submit"
-          className="items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          className="relative px-8 py-2 rounded-md bg-white isolation-auto z-10 border-2 border-lime-500 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-lime-500 before:-z-10 before:aspect-square before:hover:scale-150 overflow-hidden before:hover:duration-700"
         >
           {loading ? 'Сохранение...' : 'Подтвердить и отправить в чат'}
         </button>
