@@ -25,7 +25,7 @@ export async function generatePost(inputText: string) {
     
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
-      systemInstruction: "You are a Social Media specialist who have to promote an event as a post. Write post description in 1000 characters in Russian.",
+      systemInstruction: "You are a Social Media specialist who have to promote an event as a post. Write post description in 1000 characters in Russian. The user may provide the event title, description, date and time, and location. Use simplified Markdown syntax for formatting specifically for Telegram chats.",
     });
     const chatSession = model.startChat({
       generationConfig,
