@@ -21,40 +21,6 @@ export default function Component() {
   const [status, setStatus] = useState<string>('');
   const [response, setResponse] = useState<string>('');
 
-  useEffect(() => {
-    const fetchChatId = async () => {
-      try {
-        const { data: authData, error: authError } = await supabase.auth.getSession();
-        if (authError) {
-          throw authError;
-        }
-
-        const userId = authData.session?.user.id;
-
-        if (userId) {
-          const { data: userData, error: userError } = await supabase
-            .from('users')
-            .select('chatId')
-            .eq('auth_id', userId) // Assuming `auth_id` in `users` table links to `auth` table
-            .single();
-
-          if (userError) {
-            throw userError;
-          }
-
-          setChatId(userData.chatId);
-        } else {
-          setError('No user session found.');
-        }
-      } catch (error) {
-        console.error('Error fetching chatId:', error);
-        setError('Error fetching chatId.');
-      }
-    };
-
-    fetchChatId();
-  }, []);
-
   const sendMessage = async (outputText: string, chatId: string) => {
     const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
@@ -211,6 +177,17 @@ export default function Component() {
               onChange={(e) => setLocation(e.target.value)}
             />
           </div>
+        </div>
+        <div className='px-5 py-2 bg-white rounded-lg font-mono'>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Chat ID</label>
+          <input
+            className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
+            placeholder="Chat ID"
+            type="text"
+            id="chatId"
+            value={chatId}
+            onChange={(e) => setChatId(e.target.value)}
+          />
         </div>
         <button
           type="button"
