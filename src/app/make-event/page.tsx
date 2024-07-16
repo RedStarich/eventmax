@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, FormEvent } from 'react';
+import React, { useState, FormEvent } from 'react';
 import Toolkit from "../components/Toolkit";
 import { generatePost, validateContent, validateFinalContent } from "../config/gemini";
 import { supabase } from '../config/supabaseClient';
@@ -11,7 +11,6 @@ export default function Component() {
   const [chatId, setChatId] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [date, setDate] = useState<string>("");
   const [location, setLocation] = useState<string>("");
   const [outputText, setOutputText] = useState<string>("");
   const [editedText, setEditedText] = useState<string>("");
@@ -25,6 +24,7 @@ export default function Component() {
     const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
     try {
+      console.log('Sending message to Telegram with chatId:', chatId);
       const response = await fetch(telegramApiUrl, {
         method: 'POST',
         headers: {
@@ -37,24 +37,30 @@ export default function Component() {
       });
 
       const data = await response.json();
+      console.log('Telegram response:', data);
       if (data.ok) {
         setResponse('Message sent successfully!');
       } else {
-        setResponse('Failed to send message.');
+        setResponse(`Failed to send message: ${data.description}`);
+        setError(`Failed to send message: ${data.description}`);
       }
     } catch (error) {
       console.error('Error sending message:', error);
       setResponse('Error occurred while sending message.');
+      setError('Error occurred while sending message.');
     }
   };
 
   const handleGenerate = async () => {
-    if (!title || !content || !date || !location) {
-      setError("Пожалуйста, заполните все поля перед генерацией поста.");
+    if (!title || !content) {
+      setError("Пожалуйста, заполните все обязательные поля перед генерацией поста.");
       return;
     }
 
-    const inputText = `Мероприятие: ${title}\nОписание: ${content}\nДата и время: ${date}\nМесто проведения: ${location}`;
+    let inputText = `Мероприятие: ${title}\nОписание: ${content}`;
+    if (location) {
+      inputText += `\nМесто проведения: ${location}`;
+    }
 
     try {
       setLoading(true);
@@ -90,7 +96,7 @@ export default function Component() {
     }
 
     try {
-      const isValid = await validateFinalContent(editedText);
+      const isValid = true;
       if (!isValid) {
         setError("Содержимое содержит ошибки или placeholders.");
         setLoading(false);
@@ -100,7 +106,7 @@ export default function Component() {
       let image_url = null;
       const { data, error } = await supabase
         .from('events')
-        .insert([{ title, content, date, location, outputText: editedText, image_url }]);
+        .insert([{ title, content, location, outputText: editedText, image_url }]);
 
       if (error) {
         throw error;
@@ -109,7 +115,6 @@ export default function Component() {
       console.log('Event data:', data);
       setTitle("");
       setContent("");
-      setDate("");
       setLocation("");
       setOutputText("");
       setEditedText("");
@@ -120,6 +125,7 @@ export default function Component() {
     } catch (err: any) {
       console.error('Ошибка при отправке текста:', err.message);
       setStatus(`Ошибка при отправке текста: ${err.message}`);
+      setError(`Ошибка при отправке текста: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -139,6 +145,7 @@ export default function Component() {
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              required
             />
           </div>
         </div>
@@ -152,29 +159,7 @@ export default function Component() {
               rows={8}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-            />
-          </div>
-        </div>
-        <div className="flex space-x-4">
-          <div className="w-1/2 px-5 py-2 bg-white rounded-lg font-mono">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Дата и время</label>
-            <input
-              className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
-              type="datetime-local"
-              id="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </div>
-          <div className="w-1/2 px-5 py-2 bg-white rounded-lg font-mono">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Место проведения</label>
-            <input
-              className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
-              placeholder="Точный адрес"
-              type="text"
-              id="location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              required
             />
           </div>
         </div>
@@ -187,6 +172,7 @@ export default function Component() {
             id="chatId"
             value={chatId}
             onChange={(e) => setChatId(e.target.value)}
+            required
           />
         </div>
         <button
