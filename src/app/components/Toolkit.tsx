@@ -1,11 +1,12 @@
 import React from 'react'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 export default function Toolkit() {
-    const currentPage = '/make-event';
+    const pathname = usePathname();
 
     return (
-        <header className="bg-primary text-primary-foreground py-4 font-mono ">
+        <header className="bg-primary py-4 text-primary-foreground font-mono">
             <div className="container mx-auto flex justify-center">
                 <nav className="flex items-center gap-10">
                     <div className="flex space-x-2 border-[3px] border-purple-400 rounded-xl select-none">
@@ -15,12 +16,14 @@ export default function Toolkit() {
                                 name="radio"
                                 value="/make-event"
                                 className="peer hidden"
+                                checked={pathname === '/make-event'}
+                                readOnly
                             />
-                            <a href="/make-event">
-                            <span className="tracking-widest peer-checked:bg-gradient-to-r peer-checked:from-[blueviolet] peer-checked:to-[violet] peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out">
-                                Событие
-                            </span>
-                            </a>
+                            <Link href="/make-event">
+                                <span className={`tracking-widest text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out ${pathname === '/make-event' ? 'bg-gradient-to-r from-[blueviolet] to-[violet] text-white' : ''}`}>
+                                    Событие
+                                </span>
+                            </Link>
                         </label>
 
                         <label className="radio flex flex-grow items-center justify-center rounded-lg p-1 cursor-pointer">
@@ -29,10 +32,14 @@ export default function Toolkit() {
                                 name="radio"
                                 value="/make-content"
                                 className="peer hidden"
+                                checked={pathname === '/make-content'}
+                                readOnly
                             />
-                            <span className="tracking-widest peer-checked:bg-gradient-to-r peer-checked:from-[blueviolet] peer-checked:to-[violet] peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out">
-                                <a href='/make-content'>Контент</a>
-                            </span>
+                            <Link href="/make-content">
+                                <span className={`tracking-widest text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out ${pathname === '/make-content' ? 'bg-gradient-to-r from-[blueviolet] to-[violet] text-white' : ''}`}>
+                                    Контент
+                                </span>
+                            </Link>
                         </label>
 
                         <label className="radio flex flex-grow items-center justify-center rounded-lg p-1 cursor-pointer">
@@ -41,24 +48,30 @@ export default function Toolkit() {
                                 name="radio"
                                 value="/make-survey"
                                 className="peer hidden"
+                                checked={pathname === '/make-survey'}
+                                readOnly
                             />
-                            <span className="tracking-widest peer-checked:bg-gradient-to-r peer-checked:from-[blueviolet] peer-checked:to-[violet] peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out">
-                                Опрос
-                            </span>
+                            <Link href="/make-survey">
+                                <span className={`tracking-widest text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out ${pathname === '/make-survey' ? 'bg-gradient-to-r from-[blueviolet] to-[violet] text-white' : ''}`}>
+                                    Опрос
+                                </span>
+                            </Link>
                         </label>
 
                         <label className="radio flex flex-grow items-center justify-center rounded-lg p-1 cursor-pointer">
                             <input
                                 type="radio"
                                 name="radio"
-                                value="/make-content"
+                                value="/make-bot"
                                 className="peer hidden"
+                                checked={pathname === '/make-bot'}
+                                readOnly
                             />
-                            <a href="/make-bot">
-                                <span className="tracking-widest peer-checked:bg-gradient-to-r peer-checked:from-[blueviolet] peer-checked:to-[violet] peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out">
+                            <Link href="/make-bot">
+                                <span className={`tracking-widest text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out ${pathname === '/make-bot' ? 'bg-gradient-to-r from-[blueviolet] to-[violet] text-white' : ''}`}>
                                     Заявление
                                 </span>
-                            </a>
+                            </Link>
                         </label>
                     </div>
                 </nav>
