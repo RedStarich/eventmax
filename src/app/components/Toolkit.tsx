@@ -27,11 +27,11 @@ export default function Toolkit() {
                             <input
                                 type="radio"
                                 name="radio"
-                                value="/make-hw"
+                                value="/make-content"
                                 className="peer hidden"
                             />
                             <span className="tracking-widest peer-checked:bg-gradient-to-r peer-checked:from-[blueviolet] peer-checked:to-[violet] peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out">
-                                Домашка
+                                <a href='/make-content'>Контент</a>
                             </span>
                         </label>
 
@@ -39,11 +39,11 @@ export default function Toolkit() {
                             <input
                                 type="radio"
                                 name="radio"
-                                value="/make-test"
+                                value="/make-survey"
                                 className="peer hidden"
                             />
                             <span className="tracking-widest peer-checked:bg-gradient-to-r peer-checked:from-[blueviolet] peer-checked:to-[violet] peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out">
-                                Тест
+                                Опрос
                             </span>
                         </label>
 
@@ -56,7 +56,7 @@ export default function Toolkit() {
                             />
                             <a href="/make-bot">
                                 <span className="tracking-widest peer-checked:bg-gradient-to-r peer-checked:from-[blueviolet] peer-checked:to-[violet] peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out">
-                                    Контент
+                                    Заявление
                                 </span>
                             </a>
                         </label>

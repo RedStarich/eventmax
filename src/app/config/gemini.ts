@@ -1,16 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || " ";
 if (!apiKey) {
   throw new Error('API_KEY is not defined in the environment variables');
 }
 const genAI = new GoogleGenerativeAI(apiKey);
-
-const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
-  systemInstruction: "You are a Social Media specialist who have to promote an event as a post. Write post description in 1000 characters in Russian. Use simplified Markdown syntax for formatting specifically for Telegram chats.",
-});
 
 const generationConfig = {
   temperature: 1,
@@ -22,10 +16,9 @@ const generationConfig = {
 
 export async function generatePost(inputText: string) {
   try {
-    
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
-      systemInstruction: "You are a Social Media specialist who have to promote an event as a post. Write post description in 1000 characters in Russian. The user may provide the event title, description, date and time, and location. Use simplified Markdown syntax for formatting specifically for Telegram chats.",
+      systemInstruction: "You are a Social Media specialist who has to promote an event as a post. Write the post description in 1000 characters in Russian. The user may provide the event title, description, date and time, and location. Use simplified Markdown syntax for formatting specifically for Telegram chats.",
     });
     const chatSession = model.startChat({
       generationConfig,
@@ -37,22 +30,45 @@ export async function generatePost(inputText: string) {
       ],
     });
 
-    const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
-    console.log("API Response:", result); // Строка для отладки
+    const result = await chatSession.sendMessage(inputText);
+    console.log("API Response:", result); // Debugging line
     return result.response.text();
   } catch (error) {
-    console.error("Error generating post:", error); // Строка для отладки
+    console.error("Error generating post:", error); // Debugging line
     throw new Error("Ошибка при генерации поста.");
+  }
+}
+
+export async function generateSocialMediaPost(prompt: string) {
+  try {
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      systemInstruction: "You are a Social Media specialist who creates engaging and relevant social media posts. Write a post in 1000 characters in Russian. Use simplified Markdown syntax for formatting specifically for Telegram chats.",
+    });
+    const chatSession = model.startChat({
+      generationConfig,
+      history: [
+        {
+          role: "user",
+          parts: [{ text: prompt }],
+        },
+      ],
+    });
+
+    const result = await chatSession.sendMessage(prompt);
+    console.log("API Response:", result); // Debugging line
+    return result.response.text();
+  } catch (error) {
+    console.error("Error generating social media post:", error); // Debugging line
+    throw new Error("Ошибка при генерации поста для социальных сетей.");
   }
 }
 
 export async function generateContent(inputText: string) {
-  
   try {
-    
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
-      systemInstruction: "You are a Social Media specialist who have to create an entertaining and/or educational and overall useful post. Write post in 1000 characters in Russian. Use simplified Markdown syntax for formatting specifically for Telegram chats",
+      systemInstruction: "You are a Social Media specialist who has to create an entertaining and/or educational and overall useful post. Write the post in 1000 characters in Russian. Use simplified Markdown syntax for formatting specifically for Telegram chats.",
     });
     const chatSession = model.startChat({
       generationConfig,
@@ -64,23 +80,20 @@ export async function generateContent(inputText: string) {
       ],
     });
 
-    const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
-    console.log("API Response:", result); // Строка для отладки
+    const result = await chatSession.sendMessage(inputText);
+    console.log("API Response:", result); // Debugging line
     return result.response.text();
   } catch (error) {
-    console.error("Error generating post:", error); // Строка для отладки
+    console.error("Error generating post:", error); // Debugging line
     throw new Error("Ошибка при генерации поста.");
   }
 }
 
-
 export async function generateTask(inputText: string) {
-  
   try {
-    
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
-      systemInstruction: "You are an Educator and Student mentor who provides comprehensive and clear homeworks for junior students. Write post in 1000 characters in Russian. Write the text from Gemini Gemtext format to Telegram format. Maintain the original formatting where possible, converting headings, links, lists, and quotes appropriately.",
+      systemInstruction: "You are an Educator and Student mentor who provides comprehensive and clear homework for junior students. Write the post in 1000 characters in Russian. Write the text from Gemini Gemtext format to Telegram format. Maintain the original formatting where possible, converting headings, links, lists, and quotes appropriately.",
     });
     const chatSession = model.startChat({
       generationConfig,
@@ -92,12 +105,12 @@ export async function generateTask(inputText: string) {
       ],
     });
 
-    const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
-    console.log("API Response:", result); // Строка для отладки
+    const result = await chatSession.sendMessage(inputText);
+    console.log("API Response:", result); // Debugging line
     return result.response.text();
   } catch (error) {
-    console.error("Error generating post:", error); // Строка для отладки
-    throw new Error("Ошибка при генерации поста.");
+    console.error("Error generating task:", error); // Debugging line
+    throw new Error("Ошибка при генерации задания.");
   }
 }
 
@@ -105,7 +118,7 @@ export async function validateContent(inputText: string) {
   try {
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
-      systemInstruction: "You are a Social Media specialist who have to verify if the content is appropriate for a social media post in Russian. Return 'true' if the content is appropriate and contains no harmful or explicit language, otherwise return 'false'.",
+      systemInstruction: "You are a Social Media specialist who has to verify if the content is appropriate for a social media post in Russian. Return 'true' if the content is appropriate and contains no harmful or explicit language, otherwise return 'false'.",
     });
 
     const chatSession = model.startChat({
@@ -133,7 +146,7 @@ export async function validateFinalContent(inputText: string) {
   try {
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
-      systemInstruction: "You are a Social Media specialist who have to verify if the content is free of errors like missing context, incorrect hashtags, or placeholders in square brackets. Return 'true' if the content is error-free, otherwise return 'false'.",
+      systemInstruction: "You are a Social Media specialist who has to verify if the content is free of errors like missing context, incorrect hashtags, or placeholders in square brackets. Return 'true' if the content is error-free, otherwise return 'false'.",
     });
 
     const chatSession = model.startChat({
