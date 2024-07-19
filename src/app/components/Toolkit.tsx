@@ -69,7 +69,7 @@ export default function Toolkit() {
                                 checked={pathname === '/make-bot'}
                                 readOnly
                             />
-                            <Link href="/make-bot">
+                            <Link href="/make-doc">
                                 <span className={`tracking-widest text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out ${pathname === '/make-bot' ? 'bg-gradient-to-r from-[blueviolet] to-[violet] text-white' : ''}`}>
                                     Заявление
                                 </span>

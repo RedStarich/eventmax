@@ -51,63 +51,10 @@ const Header: React.FC = () => {
             </p>
           </Link>
         </div>
-        <nav className="hidden md:flex ml-auto gap-4 sm:gap-6 items-center">
-          <Link href="/event-list" passHref>
-            <p className="text-sm font-medium text-gray-700 hover:text-gray-900">События</p>
-          </Link>
-          <Link href="#" passHref>
-            <p className="text-sm font-medium text-gray-700 hover:text-gray-900">Контакты</p>
-          </Link>
-          <Link href="#" passHref>
-            <p className="text-sm font-medium text-gray-700 hover:text-gray-900">FAQ</p>
-          </Link>
-          {user ? (
-            <>
-              <Link href="/profile" passHref>
-                <p className="text-sm font-medium text-gray-700 hover:text-gray-900">Мой профиль</p>
-              </Link>
-              <button onClick={handleSignOut} className="w-24 h-10 text-white  bg-gradient-to-r from-orange-500 via-pink-500 to-red-500 rounded-lg shadow-lg hover:scale-105 duration-200 hover:drop-shadow-2xl hover:shadow-[#7dd3fc] hover:cursor-pointer">
-                Выйти
-              </button>
-            </>
-          ) : (
-            <LinkButton href="/make-event"><button className='w-24 h-10 text-white  bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg shadow-lg hover:scale-105 duration-200 hover:drop-shadow-2xl hover:shadow-[#7dd3fc] hover:cursor-pointer'>Приступить!</button></LinkButton>
-          )}
+        <nav className="md:flex ml-auto gap-4 sm:gap-6 items-center">
+          <Link href="/make-event" className='px-2 py-2 text-center text-white  bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg shadow-lg hover:scale-105 duration-200 hover:drop-shadow-2xl hover:shadow-[#7dd3fc] hover:cursor-pointer'>Начать!</Link>
         </nav>
-        <div className="md:hidden ml-auto">
-          <button onClick={() => setIsOpen(!isOpen)} className="text-black">
-            <MenuIcon className="h-6 w-6" />
-          </button>
-        </div>
       </header>
-      {isOpen && (
-        <div id="mobile-menu" className="md:hidden absolute top-14 left-0 right-0 bg-white border-b">
-          <nav className="flex flex-col items-center p-4 gap-4">
-            <Link href="/event-list" passHref>
-              <p className="text-sm font-medium text-gray-700 hover:text-gray-900">События</p>
-            </Link>
-            <Link href="#" passHref>
-              <p className="text-sm font-medium text-gray-700 hover:text-gray-900">Контакты</p>
-            </Link>
-            <Link href="#" passHref>
-              <p className="text-sm font-medium text-gray-700 hover:text-gray-900">FAQ</p>
-            </Link>
-            {user ? (
-              <>
-                <Link href="/profile" passHref>
-                  <p className="text-sm font-medium text-gray-700 hover:text-gray-900">Мой профиль</p>
-                </Link>
-                <button onClick={handleSignOut} className="w-24 h-10 text-white font-semibold bg-gradient-to-r from-orange-500 via-pink-500 to-red-500 rounded-lg shadow-lg hover:scale-105 duration-200 hover:drop-shadow-2xl hover:shadow-[#7dd3fc] hover:cursor-pointer">
-                  Выйти
-                </button>
-              </>
-            ) : (
-              <LinkButton href="/make-event"><button className='w-24 h-10 text-white font-semibold bg-gradient-to-r from-lime-600 via-green-600 to-green-700 rounded-lg shadow-lg hover:scale-105 duration-200 hover:drop-shadow-2xl hover:shadow-[#7dd3fc] hover:cursor-pointer'>
-                Приступить!</button></LinkButton>
-            )}
-          </nav>
-        </div>
-      )}
     </>
   );
 }

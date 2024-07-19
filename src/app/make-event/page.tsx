@@ -149,7 +149,7 @@ export default function Component() {
             />
           </div>
         </div>
-        <div className='px-5'>
+        <div className='p-5'>
           <div className="w-full bg-white rounded-lg font-mono">
             <label className="block text-gray-700 text-sm font-bold mb-2">Содержание</label>
             <textarea

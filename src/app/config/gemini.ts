@@ -39,6 +39,31 @@ export async function generatePost(inputText: string) {
   }
 }
 
+export async function generateDocument(inputText: string) {
+  try {
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      systemInstruction: "You are a formal document specialist who generates formal statements and applications. Write the document in a formal style, using the provided information. Ensure the text is in Russian and formatted appropriately for official correspondence.",
+    });
+    const chatSession = model.startChat({
+      generationConfig,
+      history: [
+        {
+          role: "user",
+          parts: [{ text: inputText }],
+        },
+      ],
+    });
+
+    const result = await chatSession.sendMessage(inputText);
+    console.log("API Response:", result); // Debugging line
+    return result.response.text();
+  } catch (error) {
+    console.error("Error generating document:", error); // Debugging line
+    throw new Error("Ошибка при генерации документа.");
+  }
+}
+
 export async function generateSocialMediaPost(prompt: string) {
   try {
     const model = genAI.getGenerativeModel({

@@ -20,7 +20,7 @@ export default function Component() {
                   </p>
                 </div>
                 <a
-                    href="/register"
+                    href="/make-event"
                     className="inline-flex h-32  items-center rounded-md  px-8 text-sm font-semibold"
                   >
                     <div className="w-full h-40 flex items-center justify-center cursor-pointer">
